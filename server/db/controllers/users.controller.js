@@ -1,6 +1,7 @@
 const db = require('../postgres')
 const relationController = require('./relation.controller')
 
+
 class UserController {
     //СТАНДАРТНЫЕ ФУНКЦИИ
 async createUser(req, res) {
