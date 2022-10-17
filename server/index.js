@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use('/api/door', doorsRouter)
 app.use('/api/user', usersRouter)
-app.use('/api/hw', hwRouter) //запросы от дверей
+app.use('/api/hw', hwRouter) //запросы от дверей цифрой номер двери
 
 const start = async () => {
     try {
