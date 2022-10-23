@@ -11,9 +11,18 @@ class DoorsController {
         res.json(newRaw.rows[0])
     }    
     // получить список дверей
-    async getAllDoors(req, res) {
+    async getAllDoorsName(req, res) {
         const doors = await db.query('SELECT * from doors')
-        res.json(doors.rows)
+        const doorName = doors.rows.map((el, i) => {
+            let elMod = {
+                text: el.name,
+                value: `access${i}`
+            }
+            return elMod
+        
+        })
+        // res.json(doors.rows)
+        res.json(doorName)
     }
     // получить дверь по ID
     async getOneDoor(req, res) {

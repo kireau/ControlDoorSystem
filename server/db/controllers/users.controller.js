@@ -21,7 +21,8 @@ async createUser(req, res) {
     })
 }
 async getAllUsers(req, res) {
-
+    const users = await db.query('SELECT name from users')
+    res.json(users.rows)
 }
 async getOneUser(req, res) {
 
@@ -38,6 +39,7 @@ async deleteUser(req, res) {
     res.json(user.rows[0])
 }    
     //ВНУТРЕННИЕ ФУНКЦИИ
+    //получить чип юзера
 async getUserChip(idUser) {
     const userChip = await db.query(
         'SELECT chip from users WHERE id = $1',
@@ -46,7 +48,29 @@ async getUserChip(idUser) {
     // console.log(userChip.rows[0].chip)
     return userChip.rows[0].chip
 }
-    
+    //проверить привязку юзера к двери
+async checkUserDoor(req, res) {
+    const user = req.params.user
+    const door = req.params.door
+
+    const userID = await db.query(
+        'SELECT id from users WHERE name = $1',
+        [user]
+    )
+    const doorID = await db.query(
+        'SELECT id from doors WHERE name = $1',
+        [door]
+    )
+    const check = await db.query(
+        'SELECT * from users_doors WHERE id_user = $1 AND id_door = $2',
+        [userID.rows[0].id, doorID.rows[0].id]
+    )
+    // console.log(check.rows[0])
+    const access = check.rows[0] ? 'true' : 'false'
+    // console.log(access)
+
+    res.json(access)
+}
 
 }
 

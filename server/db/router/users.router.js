@@ -7,5 +7,6 @@ router.get('/', usersController.getAllUsers) // Вывести всех юзер
 router.get('/:id', usersController.getOneUser) // Вывести одного юзера
 router.put('/', usersController.updateUser) // Обновить юзера
 router.delete('/:id', usersController.deleteUser) // Удалить юзера
+router.post('/check/:user/:door', usersController.checkUserDoor) // Проверить привязку юзера к дверям
 
 module.exports = router

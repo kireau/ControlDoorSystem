@@ -9,8 +9,8 @@ class HWController {
             'SELECT id_user from users_doors WHERE id_door = $1',
             [id_door]
         )
-        // console.log(keysID.rows)
-
+        console.log(keysID.rows)
+        // перебор массива и получение ключей по ID юзера
         const keys = []
         for (const el of keysID.rows) {
             keys.push( await userController.getUserChip(el.id_user))
