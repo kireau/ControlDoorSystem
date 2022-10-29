@@ -20,12 +20,13 @@ async createUser(req, res) {
         relationController.createRelation(userId, doorsId)
     })
 }
-async getAllUsers(req, res) {
+async getAllUsersName(req, res) {
     const users = await db.query('SELECT name from users')
     res.json(users.rows)
 }
-async getOneUser(req, res) {
-
+async getAllUsersRole(req, res) {
+    const usersRole = await db.query('SELECT role FROM users')
+    res.json(usersRole.rows)
 }
 async updateUser(req, res) {
 
