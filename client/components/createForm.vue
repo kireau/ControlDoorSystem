@@ -4,7 +4,8 @@
       elevation="11"
       outlined
     >
-      <v-row class="mt-5 justify-center">
+    <!-- Блок личных данных -->
+      <v-row class="mt-3 justify-center">
         <v-col
             cols="12"
             sm="6"
@@ -60,12 +61,13 @@
             ></v-text-field>
           </v-col>
       </v-row>
+      <!-- Блок получения ключа -->
       <v-card
         cols="6"
         outlined
         >
         <v-row class="justify-center
-                      mt-5">
+                      mt-3">
           <v-col
             cols="12"
             sm="6"
@@ -97,14 +99,49 @@
           </v-col>
         </v-row>
       </v-card>
+      <!-- Блок доступных дверей -->
+      <v-card class="d-flex justify-space-around mt-3"
+              flat
+              tile>
+        <v-card outlined
+              class="text-center"
+              width="150"
+              v-for="item in doorsAccessSelect"
+              :key="item.id"
+        >
+          <v-checkbox
+            v-model="doorAccess"
+            :label= item.text
+            :value= item.id
+          ></v-checkbox>
+        </v-card>
+      </v-card>
+      <!-- Блок кнопок -->
+      <v-row class="justify-center mt-3">
+        <v-btn
+          class="ml-5 green"
+          elevation="4"
+          :disabled="!checkForm ? true : false"
+          @click="createUser"
+        >
+          Регистрация
+        </v-btn>
+        <v-btn
+          class="ml-5 red"
+          elevation="4"
+          @click="getKey"
+        >
+          Отмена
+        </v-btn>
+      </v-row>
       <!-- тестирование -->
-      <v-row class="justify-center">
+      <v-row class="justify-center mt-5">
         <v-col
           cols="12"
           sm="6"
           md="3">
           <v-text-field
-            v-model="testField"
+            v-model="doorAccess"
             label= 'do'
             filled
 
@@ -136,29 +173,60 @@
         doors: '',
         doorsItems: [],
         chip: '',
+        doorsAccessSelect: [],
+        doorAccess: [],
       }
     },
 
     methods: {
       // дорабатывается!!!!!!!!!
+      // получить ключ из двери
       async getKey() {
         const key = await this.$axios.$post(`http://localhost:3666/api/hw/getKey/${this.doors}`)
-        this.testField = key
+        this.chip = key
       },
+
+      // отправить данные на создание юзера
+      async createUser() {
+        await this.$axios.$post('http://localhost:3666/api/user/', {
+          name: this.name,
+          login: this.login,
+          password: this.password,
+          role: this.role,
+          chip: this.chip,
+          doors: this.doorAccess
+        })
+        alert('Пользователь успешно создан')
+      }
+    },
+
+    computed: {
+      // проверка заполнения формы
+      checkForm() {
+        // if(this.name && this.login && this.password && this.role && this.chip) {
+        //   return this.checkFormFlag = true
+        // }
+        return Boolean(this.name && this.login && this.password && this.role && this.chip)
+
+
+
+      }
     },
 
     async mounted () {
       // Получаем список дверей
       const gettingDoorList = await this.$axios.$get('http://localhost:3666/api/door')
-      console.log(gettingDoorList)
+      //console.log(gettingDoorList)
       let doorList = []
       for (const el of gettingDoorList) {
-        console.log(el.text)
+        //console.log(el.text)
         doorList.push(el.text)
       }
       this.doorsItems = doorList
       ///////////////////////////////////////
-
+      // Формаруем массив данных для карточек дверей (чекбоксы)
+      this.doorsAccessSelect = gettingDoorList
+      ///////////////////////////////////////
     },
   }
 </script>

@@ -1,5 +1,6 @@
 const db = require('../postgres')
 const userController = require('../controllers/users.controller')
+const axios = require('axios')
 
 class HWController {
     // отправка списка ключей для двери
@@ -28,8 +29,13 @@ class HWController {
         )
         ////////////////
         // Здесь нужно организовать ПОСТ-запрос к двери
+        const testRes = await axios.post('https://jsonplaceholder.typicode.com/posts', {
+            title: '222',
+            body: door.rows[0].name,
+            userID: door.rows[0].id,
+        })
         ////////////////
-        res.json(door.rows[0].id + door.rows[0].name)
+        res.json(testRes.data.title + testRes.data.userID)
     }
 }
 

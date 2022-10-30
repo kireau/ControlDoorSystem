@@ -16,7 +16,8 @@ class DoorsController {
         const doorName = doors.rows.map((el, i) => {
             let elMod = {
                 text: el.name,
-                value: `access${i}`
+                value: `access${i}`,
+                id: el.id,
             }
             return elMod
         
