@@ -21,7 +21,7 @@ async createUser(req, res) {
     })
 }
 async getAllUsersName(req, res) {
-    const users = await db.query('SELECT name from users')
+    const users = await db.query('SELECT id, name from users')
     res.json(users.rows)
 }
 async getAllUsersRole(req, res) {
