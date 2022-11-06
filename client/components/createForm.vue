@@ -188,15 +188,22 @@
 
       // отправить данные на создание юзера
       async createUser() {
-        await this.$axios.$post('http://localhost:3666/api/user/', {
-          name: this.name,
-          login: this.login,
-          password: this.password,
-          role: this.role,
-          chip: this.chip,
-          doors: this.doorAccess
-        })
-        alert('Пользователь успешно создан')
+        try {
+          await this.$axios.$post('http://localhost:3666/api/user/', {
+            name: this.name,
+            login: this.login,
+            password: this.password,
+            role: this.role,
+            chip: this.chip,
+            doors: this.doorAccess
+          })
+          alert(`Пользователь ${this.name} успешно создан`)
+          } catch (error) {
+            alert("ERROR!!!")
+            console.log(error)
+          }
+
+
       }
     },
 

@@ -17,7 +17,7 @@
       </template>
 </v-data-table>
       <template>
-        <v-toolbar>
+
           <v-rows justify="center">
             <v-dialog v-model="dialogDelete" max-width="500px">
               <v-card>
@@ -31,7 +31,7 @@
               </v-card>
             </v-dialog>
           </v-rows>
-        </v-toolbar>
+
       </template>
 
 
@@ -61,6 +61,7 @@
         editedUser: {
           name: '',
           id: '',
+          index: '',
         }
       }
     },
@@ -78,6 +79,7 @@
     methods: {
       deleteRow(userID) {
         this.dialogDelete = true
+        this.editedUser.index = this.items.indexOf(userID)
         this.editedUser.name = userID.name
         this.editedUser.id = userID.userID
         // console.log(userID.userID)
@@ -89,8 +91,15 @@
         this.editedUser.id = ''
       },
       async confirmDelete() {
-        await this.$axios.$delete(`http://localhost:3666/api/user/${this.editedUser.id}`)
-        this.closeDelete()
+        try {
+          await this.$axios.$delete(`http://localhost:3666/api/user/${this.editedUser.id}`)
+          this.items.splice(this.editedUser.index, 1)
+          this.closeDelete()
+        } catch (error) {
+          alert('Что-то пошло не так...')
+          this.closeDelete()
+        }
+
       }
     },
 
