@@ -74,6 +74,68 @@ class UserController {
 
     res.json(access);
   }
+  // Сформировать данные таблицы + хэдер
+  async tableData(req, res) {
+    // запрашиваем три таблицы из БД
+    const usersTable = await db.query('SELECT * from users')
+    const doorsTable = await db.query('SELECT * from doors')
+    const relationsTable = await db.query('SELECT * from users_doors')
+
+    // заготовка ответа
+    let tableInfo = {
+      headers: [
+        {
+          text: 'Дейтсвия',
+          value: 'actions',
+          sortable: false,
+        },
+        {
+          text: 'Сотрудник',
+          align: 'start',
+          value: 'name',
+        },
+      ],
+      items: [],
+    }
+     
+    // формируем строку хэдера
+    const doorName = doorsTable.rows.map((el) => {
+      let elMod = {
+          text: el.name,
+          value: `access${el.id}`,
+          id: el.id,
+      }
+      return elMod
+    })
+
+    tableInfo.headers = tableInfo.headers.concat(doorName)
+
+    // строки данных
+    let completRow = []
+    // для каждого юзера..
+    for (const el1 of usersTable.rows) { 
+      let elRow = {
+        name: el1.name,
+        userID: el1.id,
+      } 
+      // ..берем каждую дверь..
+      for (const el2 of doorName) { 
+        elRow[el2.value] = 'false' // дефолтное значение 'false'
+        // ..и ищем связь
+        for (const el3 of relationsTable.rows) { 
+          if (el3.id_user === el1.id && el3.id_door === el2.id) {
+            elRow[el2.value] = 'true' 
+            break
+          }     
+        }
+      }
+      completRow.push(elRow)
+    }
+    tableInfo.items = completRow
+
+
+    res.json(tableInfo)
+  }
 }
 
 module.exports = new UserController();

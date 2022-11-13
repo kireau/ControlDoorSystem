@@ -4,6 +4,7 @@ const usersController = require('../controllers/users.controller')
 
 router.post('/', usersController.createUser) // Создать юзера
 router.get('/', usersController.getAllUsersName) // Вывести всех юзеров
+router.get('/tableData', usersController.tableData) // Получить объекты таблицы
 router.get('/role', usersController.getAllUsersRole) // вывести все роли юзеров
 // router.get('/:id', usersController.getOneUser) // Вывести одного юзера
 router.put('/', usersController.updateUser) // Обновить юзера

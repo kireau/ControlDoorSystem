@@ -43,18 +43,7 @@
     name: 'MainTable',
     data() {
       return {
-        headers: [
-          {
-            text: 'Дейтсвия',
-            value: 'actions',
-            sortable: false,
-          },
-          {
-            text: 'Сотрудник',
-            align: 'start',
-            value: 'name',
-          },
-        ],
+        headers: [],
         items: [],
 
         dialogDelete: false,
@@ -102,32 +91,12 @@
 
       }
     },
-
     async mounted () {
-      // Получаем список дверей и добавляес его к хэдэру таблицы
-      const doorList = await this.$axios.$get('http://localhost:3666/api/door')
-      console.log(doorList)
-      this.headers = this.headers.concat(doorList)
-      // формируем тело таблицы
-      const nameColumn = await this.$axios.$get('http://localhost:3666/api/user')
-      console.log(nameColumn)
+      const tableData = await this.$axios.$get('http://localhost:3666/api/user/tableData')
+      this.headers = tableData.headers
+      this.items = tableData.items
+    }
 
-      let completRow = []
-        for (const el1 of nameColumn) {
-          let elRow = {
-            name: el1.name,
-            userID: el1.id,
-          }
-          for (const el2 of doorList) {
-            elRow[el2.value] = await this.$axios.$post(`http://localhost:3666/api/user/check/${el1.name}/${el2.text}`)
-            // elRow[el2.value] = 'false'
-          }
-          completRow.push(elRow)
-        }
-      console.log(completRow)
-
-      this.items = completRow
-    },
 
   }
 </script>
