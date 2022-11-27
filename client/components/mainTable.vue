@@ -144,13 +144,9 @@
 <!-- диалог редактирования -->
       <template>
           <v-row justify="center">
-            <v-dialog v-model="dialogEditForm" max-width="1000px">
+            <v-dialog v-model="dialogEditForm" max-width="1050px">
               <v-card>
                 <edit-item :itemData="editedItem"></edit-item>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="closeEditForm">Cancel</v-btn>
-                </v-card-actions>
               </v-card>
             </v-dialog>
           </v-row>
@@ -285,7 +281,7 @@
               this.closeEdit()
               this.editedItem = userRow
               this.inputPassword = ''
-              this.openEdit()
+              this.openEditForm()
             }
 
         } catch (error) {
@@ -304,12 +300,12 @@
 
       },
 
-      openEdit() {
-        // this.dialogEditForm = true
+      openEditForm() {
+        this.dialogEditForm = true
         //console.log(this.editedItem)
-        setTimeout(() => {
-                this.$nuxt.$options.router.push({path: `/edit/${this.editedItem.userID}`})
-              }, 200)
+        // setTimeout(() => {
+        //         this.$nuxt.$options.router.push({path: `/edit/${this.editedItem.userID}`})
+        //       }, 200)
       },
 
 

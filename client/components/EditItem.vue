@@ -1,16 +1,30 @@
 <template>
   <v-card>
-    <v-card-title class="text-h5">Редактировать пользователя {{ itemData.name }}?</v-card-title>
+    <v-card-title class="text-h5">Редактировать пользователя "{{ itemData.name }}" ?</v-card-title>
     <v-card-text>
-      <edit-form></edit-form>
+      <form-base :userRow="this.itemData"></form-base>
+      {{ this.itemData }}
     </v-card-text>
+    <v-card-actions class="justify-center mt-3 pb-5">
+        <v-btn
+          class="green"
+          elevation="1"
+        >
+          Подтвердить
+        </v-btn>
+        <v-btn
+          class="ml-5 red"
+          elevation="1"
+        >
+          Отмена
+        </v-btn>
+    </v-card-actions>
 
-    <v-btn color="blue darken-1" text >OK</v-btn>
   </v-card>
 </template>
 
 <script>
-  import EditForm from './createForm.vue'
+  import FormBase from './formBase.vue'
 
   export default {
     props: {
@@ -18,7 +32,7 @@
     },
 
     components: {
-      EditForm,
+      FormBase,
     },
 
     name: 'EditItem',
