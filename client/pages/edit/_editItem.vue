@@ -117,34 +117,20 @@
         </v-card>
       </v-card>
       <!-- Блок кнопок -->
-      <create-form-button :userData="user"></create-form-button>
-      <!-- тестирование -->
-      <!-- <v-row class="justify-center mt-5">
-        <v-col
-          cols="12"
-          sm="6"
-          md="3">
-          <v-text-field
-            v-model="doorAccess"
-            label= 'do'
-            filled
+      <edit-form-button :userData="user"></edit-form-button>
 
-          ></v-text-field>
-        </v-col>
-      </v-row> -->
-      <!-- тестирование -->
     </v-card>
   </v-form>
 </template>
 
 <script>
-  import CreateFormButton from './createFormButton.vue'
+  import EditFormButton from '../../components/editFormButton.vue'
 
   export default {
     name: 'CreateForm',
 
     components: {
-      CreateFormButton,
+      EditFormButton,
     },
 
     data() {
@@ -164,13 +150,6 @@
           doorAccess: [],
         },
 
-        // password: '',
-        // login: '',
-        // name: '',
-        // role: '',
-        // chip: '',
-        // doorAccess: [],
-
         doors: '',
         roleItems: ['Admin',
                     'User',],
@@ -188,39 +167,10 @@
         this.user.chip = key
       },
 
-      // отправить данные на создание юзера
-      // async createUser() {
-      //   try {
-      //     await this.$axios.$post('http://localhost:3666/api/user/', {
-      //       name: this.name,
-      //       login: this.login,
-      //       password: this.password,
-      //       role: this.role,
-      //       chip: this.chip,
-      //       doors: this.doorAccess
-      //     })
-      //     alert(`Пользователь ${this.name} успешно создан`)
-      //     } catch (error) {
-      //       alert("ERROR!!!")
-      //       console.log(error)
-      //     }
-      // },
-
-      // closeForm() {
-      //   setTimeout(() => {
-      //     this.$nuxt.$options.router.push({path: '/main'})
-      //   }, 500)
-      // }
     },
 
     computed: {
-      // проверка заполнения формы
-      // checkForm() {
-      //   // if(this.name && this.login && this.password && this.role && this.chip) {
-      //   //   return this.checkFormFlag = true
-      //   // }
-      //   return Boolean(this.name && this.login && this.password && this.role && this.chip)
-      // }
+
     },
 
     async mounted () {
@@ -237,7 +187,8 @@
       // Формаруем массив данных для карточек дверей (чекбоксы)
       this.doorsAccessSelect = gettingDoorList
       ///////////////////////////////////////
+
+      console.log(this.$route.params)
     },
   }
 </script>
-

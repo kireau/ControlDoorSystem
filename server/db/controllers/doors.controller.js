@@ -13,12 +13,13 @@ class DoorsController {
     // получить список дверей
     async getAllDoorsName(req, res) {
         const doors = await db.query('SELECT * from doors')
-        const doorName = doors.rows.map((el, i) => {
+        const doorName = doors.rows.map((el) => {
             let elMod = {
                 text: el.name,
-                value: `access${i}`,
+                value: `access${el.id}`,
                 id: el.id,
             }
+    
             return elMod
         
         })

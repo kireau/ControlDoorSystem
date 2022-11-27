@@ -24,7 +24,7 @@ class UserController {
 
     } catch (error) {
       console.log(`ОШИБКА!!! ${error.detail}`)
-        res.status(500).send({error: error.detail})
+        res.status(500).json(error.detail)
     } 
   }
   
@@ -35,8 +35,27 @@ class UserController {
   }
 
   async getAllUsersRole(req, res) {
-    const usersRole = await db.query("SELECT role FROM users");
+    const usersRole = await db.query("SELECT role from users");
     res.json(usersRole.rows);
+  }
+
+  async checkAdminPawwsord(req,res) {
+    const pass = req.params.pass
+    const role = 'Admin'
+    let passCheck = false
+    // console.log(passCheck)
+    // получаем пароль
+    const passData = await db.query("SELECT password from users WHERE role = $1", [role])
+    // console.log(passData)
+    // Проверяем пароль
+    for(const el of passData.rows) {
+
+      passCheck = (el.password === pass) ? true : false
+      
+      if (passCheck) break
+    }
+    // console.log(passCheck)
+    res.json(passCheck)
   }
   async updateUser(req, res) {}
   async deleteUser(req, res) {
