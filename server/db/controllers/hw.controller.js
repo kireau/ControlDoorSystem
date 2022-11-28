@@ -37,6 +37,13 @@ class HWController {
         ////////////////
         res.json(testRes.data.title + testRes.data.userID)
     }
+    // Запись последнего активного ключа из двери
+    async writeLastKey(req, res) {
+        const {id, lastKey} = req.body
+
+        console.log(id + lastKey)
+        res.json(id + lastKey)
+    }
 }
 
 module.exports = new HWController()
