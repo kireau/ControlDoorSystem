@@ -10,5 +10,6 @@ router.get('/check/:pass', usersController.checkAdminPawwsord) // Провери
 router.put('/', usersController.updateUser) // Обновить юзера
 router.delete('/:id', usersController.deleteUser) // Удалить юзера
 router.post('/check/:user/:door', usersController.checkUserDoor) // Проверить привязку юзера к дверям
+router.get('/edit/:id', usersController.getEditTableData) // Данные юзера для редактирования
 
 module.exports = router

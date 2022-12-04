@@ -124,7 +124,21 @@
         </v-card>
       </v-card>
       <!-- Блок кнопок -->
-
+      <v-card-actions class="justify-center mt-3 pb-5">
+        <v-btn
+          class="green"
+          elevation="1"
+        >
+          Подтвердить
+        </v-btn>
+        <v-btn
+          class="ml-5 red"
+          elevation="1"
+          @click="closeForm"
+        >
+          Отмена
+        </v-btn>
+      </v-card-actions>
       <!-- тестирование -->
       <v-row class="justify-center mt-5">
         <v-col
@@ -165,12 +179,12 @@
         show1: false,
 
         user: {
-          name: '',
-          login: '',
-          password: '',
-          role: '',
-          chip: '',
-          doorAccess: [],
+          name: this.userRow.name,
+          login: this.userRow.login,
+          password: this.userRow.password,
+          role: this.userRow.role,
+          chip: this.userRow.chip,
+          doorAccess: this.userRow.doors,
         },
 
         doors: '',
@@ -189,6 +203,11 @@
         this.user.chip = key
       },
 
+      closeForm() {
+        // this.userRow = {}
+        this.user = {}
+        this.$emit('closeForm')
+      },
     },
 
     computed: {
@@ -209,8 +228,19 @@
       this.doorsAccessSelect = gettingDoorList
       ///////////////////////////////////////
 
-      this.user.name = this.userRow.name
       // СДЕЛАТЬ ЗАПРОС К СЕРВЕРУ НА ДАННЫЕ ДЛЯ ФОРМЫ
+      // const editData = await this.$axios.$get(`http://localhost:3666/api/user/edit/${this.userRow.userID}`)
+      // this.user.name = editData.name
+      // this.user.login = editData.login
+      // this.user.password = editData.password
+      // this.user.role = editData.role
+      // this.user.chip = editData.chip
+      // this.user.doorAccess = editData.doors
+
+    },
+
+    unmounted() {
+      console.log('размонтирован')
     },
   }
 </script>

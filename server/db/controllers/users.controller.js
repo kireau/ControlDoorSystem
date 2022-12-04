@@ -57,7 +57,39 @@ class UserController {
     // console.log(passCheck)
     res.json(passCheck)
   }
-  async updateUser(req, res) {}
+
+  async updateUser(req, res) {
+    const { id, name, login, password, role, chip, doors } = req.body; // doors - массив ИД дверей
+    let userRow = {}
+    try {
+      const user = await db.query(`UPDATE users set 
+        name = $1, 
+        login = $2, 
+        password = $3, 
+        role = $4, 
+        chip = $5
+        WHERE id = $6
+        RETURNING *`,
+        [name, login, password, role, chip, id])
+        userRow = user.rows[0]
+        try {
+          await relationController.updateRelation(id, doors)
+          res.json(userRow)
+        } catch (error) {
+          console.log('Ошибка изменения связей')
+          console.log(error.detail)
+          res.status(400).send(error.detail)
+        }
+    } catch (error) {
+      console.log('Ошибка изменения юзера')
+      console.log(error.detail)
+      res.status(400).send(error.detail)
+    }
+    
+    
+    
+  }
+
   async deleteUser(req, res) {
     const id = req.params.id;
     const user = await db.query("DELETE from users WHERE id = $1", [id]);
@@ -154,6 +186,22 @@ class UserController {
 
 
     res.json(tableInfo)
+  }
+  // Данные юзера для редактирования
+  async getEditTableData(req, res) {
+    const id = req.params.id
+    const userData = await db.query('SELECT * from users WHERE id=$1', [id])
+    const accessDoor = await db.query('SELECT id_door from users_doors WHERE id_user=$1', [id])
+    
+    const door = accessDoor.rows.map(el => el.id_door)
+    //console.log(door)
+    let editTableInfo = {
+
+    }
+    editTableInfo = userData.rows[0]
+    editTableInfo.doors = door
+    console.log(editTableInfo)
+    res.json(editTableInfo)
   }
 }
 

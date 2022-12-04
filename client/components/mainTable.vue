@@ -144,9 +144,16 @@
 <!-- диалог редактирования -->
       <template>
           <v-row justify="center">
-            <v-dialog v-model="dialogEditForm" max-width="1050px">
+            <v-dialog
+              v-model="dialogEditForm"
+              max-width="1050px"
+              >
               <v-card>
-                <edit-item :itemData="editedItem"></edit-item>
+                <edit-item
+                :userRow="editedItem"
+                v-if="dialogEditForm"
+                @closeForm="closeEditForm"
+                ></edit-item>
               </v-card>
             </v-dialog>
           </v-row>
@@ -279,7 +286,8 @@
               this.snackText = 'Пароль принят'
               this.snackbar = true
               this.closeEdit()
-              this.editedItem = userRow
+              // this.editedItem = userRow
+              this.editedItem = await this.$axios.$get(`http://localhost:3666/api/user/edit/${userRow.userID}`)
               this.inputPassword = ''
               this.openEditForm()
             }
@@ -296,12 +304,15 @@
       },
 
       closeEditForm() {
+        this.editedItem = {}
         this.dialogEditForm = false
-
+        this.initialize()
       },
 
       openEditForm() {
+
         this.dialogEditForm = true
+        // EditItem.mount()
         //console.log(this.editedItem)
         // setTimeout(() => {
         //         this.$nuxt.$options.router.push({path: `/edit/${this.editedItem.userID}`})
@@ -336,14 +347,18 @@
           this.closeDelete()
         }
 
+      },
+      // Инициализация
+      async initialize () {
+        const tableData = await this.$axios.$get('http://localhost:3666/api/user/tableData')
+        this.headers = tableData.headers
+        this.items = tableData.items
       }
     },
     async mounted () {
 
       // получение данных таблицы
-      const tableData = await this.$axios.$get('http://localhost:3666/api/user/tableData')
-      this.headers = tableData.headers
-      this.items = tableData.items
+      this.initialize()
     }
 
 
