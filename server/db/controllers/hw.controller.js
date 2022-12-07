@@ -22,27 +22,29 @@ class HWController {
     // запрос ключа из двери 
     // !!!!!!!!!!!!!!ШАБЛОН!!!!!!!!!!!!!!!
     async getKeyFromDoor(req, res) {
-        const name = req.params.doorName
+        const name = req.body.doorName
         const door = await db.query(
-            'SELECT * FROM doors WHERE name = $1',
+            'SELECT "lastKey" FROM doors WHERE name = $1',
             [name]
         )
         ////////////////
         // Здесь нужно организовать ПОСТ-запрос к двери
-        const testRes = await axios.post('https://jsonplaceholder.typicode.com/posts', {
-            title: '222',
-            body: door.rows[0].name,
-            userID: door.rows[0].id,
-        })
+        // const testRes = await axios.post('https://jsonplaceholder.typicode.com/posts', {
+        //     title: '222',
+        //     body: door.rows[0].name,
+        //     userID: door.rows[0].id,
+        // })
         ////////////////
-        res.json(testRes.data.title + testRes.data.userID)
+        res.json(door.rows[0].lastKey)
     }
     // Запись последнего активного ключа из двери
     async writeLastKey(req, res) {
         const {id, lastKey} = req.body
 
-        console.log(id + lastKey)
-        res.json(id + lastKey)
+        // обновить последний ключ
+        const keyResult = await db.query('UPDATE doors set "lastKey" = $1 WHERE id = $2 RETURNING *', [lastKey, id])
+        // console.log(id + lastKey)
+        res.json(keyResult.rows[0])
     }
 }
 

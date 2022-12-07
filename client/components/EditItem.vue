@@ -204,7 +204,10 @@
     methods: {
       // получить ключ из двери
       async getKey() {
-        const key = await this.$axios.$post(`http://localhost:3666/api/hw/getKey/${this.doors}`)
+        const key = await this.$axios.$post(`http://localhost:3666/api/hw/getKey/`, {
+          doorName: this.doors,
+          })
+        // console.log(key)
         this.user.chip = key
       },
 
