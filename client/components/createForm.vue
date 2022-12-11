@@ -91,6 +91,7 @@
             md="3">
             <v-btn
               elevation="4"
+              color="light-green"
               :disabled="!doors ? true : false"
               @click="getKey"
               >
@@ -184,8 +185,15 @@
       // дорабатывается!!!!!!!!!
       // получить ключ из двери
       async getKey() {
-        const key = await this.$axios.$post(`http://localhost:3666/api/hw/getKey/${this.doors}`)
-        this.user.chip = key
+        try {
+          const key = await this.$axios.$post(`http://localhost:3666/api/hw/getKey`, {
+            doorName: this.doors
+          })
+          this.user.chip = key
+        } catch (error) {
+          console.log('Ошибка получения ключа')
+        }
+
       },
 
       // отправить данные на создание юзера

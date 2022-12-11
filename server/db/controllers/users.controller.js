@@ -135,11 +135,11 @@ class UserController {
     // заготовка ответа
     let tableInfo = {
       headers: [
-        {
-          text: 'Дейтсвия',
-          value: 'actions',
-          sortable: false,
-        },
+        // {
+        //   text: 'Дейтсвия',
+        //   value: 'actions',
+        //   sortable: false,
+        // },
         {
           text: 'Сотрудник',
           align: 'start',

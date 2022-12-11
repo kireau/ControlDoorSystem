@@ -106,19 +106,52 @@
               </v-card-text>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+
+            <template v-slot:activator="{on, attrs}">
+              <v-btn
+                dark
+                color="red"
+                v-bind="attrs"
+                v-on="on"
+                class="ml-5 my-3"
+                >
+                Удалить сотрудника
+              </v-btn>
+
+            </template>
+              <v-card>
+                <v-card-title class="text-h5">Удалить пользователя {{ editedUser.name }}?</v-card-title>
+                <v-card-title>
+                  Введите пароль администратора
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-text-field
+                        v-model="inputPassword"
+                        max-width="300px"
+                        :append-icon="showIcon ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showIcon ? 'text' : 'password'"
+                        @click:append="showIcon = !showIcon"
+                        @keyup.native.enter="checkAdminDelet(item)"
+                      ></v-text-field>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="checkAdminDelet(item)">OK</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
         </td>
       </template>
 
-    <!-- иконка действий -->
-      <template v-slot:item.actions="{ item }"
-      >
-        <v-icon
-          small
-          @click="deleteRow(item)">
-          mdi-delete
-        </v-icon>
 
-      </template>
 
     <!-- Наглядные тру-фэлс ДОРАБОТАТЬ!!!!-->
       <template v-slot:item.access1="{ item }"
@@ -158,24 +191,7 @@
             </v-dialog>
           </v-row>
       </template>
-<!-- Диалог удаления -->
-      <template>
 
-          <v-row justify="center">
-            <v-dialog v-model="dialogDelete" max-width="500px">
-              <v-card>
-                <v-card-title class="text-h5">Удалить пользователя {{ editedUser.name }}?</v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                  <v-btn color="blue darken-1" text @click="confirmDelete">OK</v-btn>
-                  <v-spacer></v-spacer>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-
-      </template>
 
 
   </v-container>
@@ -321,33 +337,74 @@
 
 
       // диалог удаления
-      deleteRow(userID) {
-        this.dialogDelete = true
-        this.editedUser.index = this.items.indexOf(userID)
-        this.editedUser.name = userID.name
-        this.editedUser.id = userID.userID
-        // console.log(userID.userID)
+      async checkAdminDelet(userRow) {
+        let check = false
+        try {
+          const checkPass = await this.$axios.$get(`http://localhost:3666/api/user/check/${this.inputPassword}`)
+          check = checkPass
+          console.log(`Проверка пароля: ${checkPass}`)
+            if (!checkPass) {
+              this.snackbarColor = 'red'
+              this.snackText = 'Неверный парорль'
+              this.snackbar = true
+            }
+            else {
+              this.snackbarColor = 'light-green'
+              this.snackText = 'Пароль принят'
+              this.snackbar = true
+              // this.editedItem = userRow
+              console.log(userRow)
+
+            }
+
+        } catch (error) {
+          console.log('Ошибка проверки пароля')
+          alert('Ошибка проверки пароля')
+          // this.closeDelete()
+        }
+
+        if(check) {
+          try {
+            await this.$axios.$delete(`http://localhost:3666/api/user/${userRow.userID}`)
+            this.snackText = 'Пользователь удалён'
+            this.closeDelete()
+          } catch (error) {
+              console.log('Ошибка удаления пользователя')
+              alert('Ошибка удаления пользователя')
+              this.closeDelete()
+            }
+        }
       },
+
+
+
+      // deleteRow(userID) {
+      //   this.dialogDelete = true
+      //   this.editedUser.index = this.items.indexOf(userID)
+      //   this.editedUser.name = userID.name
+      //   this.editedUser.id = userID.userID
+      //   // console.log(userID.userID)
+      // },
 
       // отмена удаления
       closeDelete() {
         this.dialogDelete = false
-        this.editedUser.name = ''
-        this.editedUser.id = ''
+        this.inputPassword = ''
+        this.initialize()
       },
 
-      // подтверждение удаления
-      async confirmDelete() {
-        try {
-          await this.$axios.$delete(`http://localhost:3666/api/user/${this.editedUser.id}`)
-          this.items.splice(this.editedUser.index, 1)
-          this.closeDelete()
-        } catch (error) {
-          alert('Что-то пошло не так...')
-          this.closeDelete()
-        }
+      // // подтверждение удаления
+      // async confirmDelete() {
+      //   try {
+      //     await this.$axios.$delete(`http://localhost:3666/api/user/${this.editedUser.id}`)
+      //     this.items.splice(this.editedUser.index, 1)
+      //     this.closeDelete()
+      //   } catch (error) {
+      //     alert('Что-то пошло не так...')
+      //     this.closeDelete()
+      //   }
 
-      },
+      // },
       // Инициализация
       async initialize () {
         const tableData = await this.$axios.$get('http://localhost:3666/api/user/tableData')
