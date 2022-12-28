@@ -34,7 +34,7 @@ class HWController {
     res.json(keys)   
     }
 
-    // Запись последнего активного ключа из двери
+    //Запись последнего активного ключа из двери
     async writeLastKey(req, res) {
         const {id, lastKey} = req.body
 
