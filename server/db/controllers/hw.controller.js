@@ -16,6 +16,7 @@ class HWController {
 
         //
         const keys = {
+            "DoorId" : id_door,
             "Keys" : [
             "1b739b35a56061",
             "2b729b35a56061",
