@@ -17,10 +17,7 @@ class HWController {
             "1b739b35a56061",
             "2b729b35a56061",
             "1b529b35a53061",
-            "1a729b31156061",
-            "1b729b35a56061",
-            "1b729b35a22222",
-            "1b729b35a22222"
+            "1b729b35a56061"
             ] 
         }
         // for (const el of keysID.rows) {
