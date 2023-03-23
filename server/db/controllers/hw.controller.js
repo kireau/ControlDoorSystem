@@ -14,10 +14,9 @@ class HWController {
         // перебор массива и получение ключей по ID юзера
         const keys = {
             "Keys" : [
-            "1b739b35a56061",
+            "1b729b35a56061",
             "2b729b35a56061",
             "1b529b35a53061",
-            "1b729b35a56061"
             ] 
         }
         // for (const el of keysID.rows) {
